@@ -1,33 +1,22 @@
 package ru.vsu.cs.eliseev.osmreader.models;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "Nodes")
+@TypeAlias("Node")
+@Getter
+@Setter
 public class Node extends ElementOnMap {
-    private double lat;
-    private double lon;
 
-    public Node(long id, double lat, double lon) {
+    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
+    private double[] location;
+
+    public Node(String id) {
         super(id);
-        this.lat = lat;
-        this.lon = lon;
-    }
-
-    @Override
-    public String getId() {
-        return "N" + id;
-    }
-
-    public double getLat() {
-        return lat;
-    }
-
-    public double getLon() {
-        return lon;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public void setLon(double lon) {
-        this.lon = lon;
     }
 }

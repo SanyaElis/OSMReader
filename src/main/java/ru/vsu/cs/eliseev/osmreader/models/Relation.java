@@ -1,24 +1,24 @@
 package ru.vsu.cs.eliseev.osmreader.models;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Document(collection = "Relations")
+@TypeAlias("Relation")
+@Getter
+@Setter
 public class Relation extends ElementOnMap {
 
-    private final List<Member> members;
+    private final List<Member> members;//todo переделать
 
-    public Relation(long id) {
+    public Relation(String id) {
         super(id);
-        this.members = new ArrayList<>();
-    }
-
-    @Override
-    public String getId() {
-        return "R" + id;
-    }
-
-    public List<Member> getMembers() {
-        return List.copyOf(members);
+        members = new ArrayList<>();
     }
 
     public void addMember(String role, ElementOnMap element) {
@@ -34,15 +34,14 @@ public class Relation extends ElementOnMap {
     }
 
     public String getMemberRole(ElementOnMap e) {
-        for (Member member : members) {
+        for (Relation.Member member : members) {
             if (member.elementOnMap == e)
                 return member.role;
         }
         throw new RuntimeException("Element " + e.getId() + " not found");
     }
 
-
-    private class Member {
+    private static class Member {
         private final String role;
         private final ElementOnMap elementOnMap;
 
@@ -52,4 +51,5 @@ public class Relation extends ElementOnMap {
         }
     }
 }
+
 

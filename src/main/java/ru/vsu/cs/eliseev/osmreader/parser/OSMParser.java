@@ -1,5 +1,6 @@
 package ru.vsu.cs.eliseev.osmreader.parser;
 
+import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class OSMParser extends DefaultHandler {
 
     private Map<String, ElementOnMap> elements;
@@ -76,7 +78,7 @@ public class OSMParser extends DefaultHandler {
                 if ((qName.equals("way") && ((Way) current).getNodes().size() >= 2)
                         || qName.equals("node")
                         || (qName.equals("relation") && !((Relation) current).getMembers().isEmpty())) {
-                    elements.put(current.getId(), current);
+                    elements.put(getId(qName, current.getId()), current);
                 }
                 current = null;
             }
@@ -90,10 +92,9 @@ public class OSMParser extends DefaultHandler {
         switch (qName) {
             case "node":
                 Node n = new Node(
-                        Long.parseLong(attributes.getValue("id")),
-                        Double.parseDouble(attributes.getValue("lat")),
-                        Double.parseDouble(attributes.getValue("lon"))
-                );
+                        attributes.getValue("id"));
+                n.setLocation(new double[]{Double.parseDouble(attributes.getValue("lat")),
+                        Double.parseDouble(attributes.getValue("lon"))});
                 n.setUser(attributes.getValue("user"));
 
                 if (attributes.getValue("uid") != null) {
@@ -114,7 +115,7 @@ public class OSMParser extends DefaultHandler {
                 current = n;
                 break;
             case "way":
-                Way w = new Way(Long.parseLong(attributes.getValue("id")));
+                Way w = new Way(attributes.getValue("id"));
                 w.setUser(attributes.getValue("user"));
 
                 if (attributes.getValue("uid") != null) {
@@ -138,7 +139,7 @@ public class OSMParser extends DefaultHandler {
                 ((Way) current).addNode((Node) elements.get("N" + attributes.getValue("ref")));
                 break;
             case "relation":
-                Relation r = new Relation(Long.parseLong(attributes.getValue("id")));
+                Relation r = new Relation(attributes.getValue("id"));
                 r.setUser(attributes.getValue("user"));
 
                 if (attributes.getValue("uid") != null) {
@@ -165,9 +166,9 @@ public class OSMParser extends DefaultHandler {
                 ElementOnMap elemMember = null;
                 if (!elements.containsKey(refMember)) {
                     switch (attributes.getValue("type")) {
-                        case "node" -> elemMember = new Node(Long.parseLong(attributes.getValue("ref")), 0, 0);
-                        case "way" -> elemMember = new Way(Long.parseLong(attributes.getValue("ref")));
-                        case "relation" -> elemMember = new Relation(Long.parseLong(attributes.getValue("ref")));
+                        case "node" -> elemMember = new Node(attributes.getValue("ref"));
+                        case "way" -> elemMember = new Way(attributes.getValue("ref"));
+                        case "relation" -> elemMember = new Relation(attributes.getValue("ref"));
                     }
                 } else {
                     elemMember = elements.get(refMember);

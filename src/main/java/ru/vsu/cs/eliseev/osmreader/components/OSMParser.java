@@ -1,4 +1,4 @@
-package ru.vsu.cs.eliseev.osmreader.parser;
+package ru.vsu.cs.eliseev.osmreader.components;
 
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;

@@ -38,6 +38,7 @@ public abstract class ElementOnMap {
     }
 
     public void addTag(String key, String value) {
+        key = key.replaceAll("\\.", "-");
         tags.put(key, value);
     }
 

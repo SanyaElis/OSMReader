@@ -18,6 +18,6 @@ public class RelationServiceImpl implements RelationService {
 
     @Override
     public void create(Relation relation) {
-
+        repository.insert(relation);
     }
 }

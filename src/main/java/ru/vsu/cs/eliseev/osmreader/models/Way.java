@@ -13,6 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Way extends ElementOnMap{
+
     private final List<Node> nodes;
 
     public Way(String id) {

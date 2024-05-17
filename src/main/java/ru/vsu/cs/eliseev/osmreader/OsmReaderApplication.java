@@ -5,9 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.xml.sax.SAXException;
 import ru.vsu.cs.eliseev.osmreader.models.ElementOnMap;
+import ru.vsu.cs.eliseev.osmreader.models.Node;
 import ru.vsu.cs.eliseev.osmreader.models.Relation;
-import ru.vsu.cs.eliseev.osmreader.parser.OSMParser;
+import ru.vsu.cs.eliseev.osmreader.models.Way;
+import ru.vsu.cs.eliseev.osmreader.components.OSMParser;
+import ru.vsu.cs.eliseev.osmreader.repositories.NodeRepository;
 import ru.vsu.cs.eliseev.osmreader.repositories.RelationRepository;
+import ru.vsu.cs.eliseev.osmreader.repositories.WayRepository;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
@@ -21,15 +25,33 @@ public class OsmReaderApplication {
         ApplicationContext context = SpringApplication.run(OsmReaderApplication.class, args);
         OSMParser parser = context.getBean(OSMParser.class);
         RelationRepository relationRepository = context.getBean(RelationRepository.class);
-
+        WayRepository wayRepository = context.getBean(WayRepository.class);
+        NodeRepository nodeRepository = context.getBean(NodeRepository.class);
+        relationRepository.deleteAll();
+        wayRepository.deleteAll();
+        nodeRepository.deleteAll();
         Map<String, ElementOnMap> result = parser.parse(new File("src/main/java/ru/vsu/cs/eliseev/osmreader/osmdata/output.osm"));
-        for ( Map.Entry<String, ElementOnMap> entry : result.entrySet() ) {
+        for (Map.Entry<String, ElementOnMap> entry : result.entrySet()) {
             String key = entry.getKey();
-            if (key.charAt(0) == 'R'){
-                relationRepository.insert((Relation) entry.getValue());
+            try {
+                switch (key.charAt(0)) {
+                    case 'R':
+                        relationRepository.insert((Relation) entry.getValue());
+                        break;
+                    case 'W':
+                        wayRepository.insert((Way) entry.getValue());
+                        break;
+                    case 'N':
+                        nodeRepository.insert((Node) entry.getValue());
+                        break;
+                    default:
+                        System.out.println("Something go wrong");
+
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
-
 //            ObjectMapper objectMapper = new ObjectMapper();
 //            ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
 //            writer.writeValue(Paths.get("src/main/java/ru/vsu/cs/eliseev/osmreader/osmdata/test1.json").toFile(), result.values());

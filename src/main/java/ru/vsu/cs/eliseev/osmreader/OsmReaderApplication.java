@@ -3,6 +3,9 @@ package ru.vsu.cs.eliseev.osmreader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.xml.sax.SAXException;
 import ru.vsu.cs.eliseev.osmreader.models.ElementOnMap;
 import ru.vsu.cs.eliseev.osmreader.models.Node;
@@ -16,6 +19,7 @@ import ru.vsu.cs.eliseev.osmreader.repositories.WayRepository;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @SpringBootApplication
@@ -52,6 +56,8 @@ public class OsmReaderApplication {
                 System.out.println(e.getMessage());
             }
         }
+        List<Node> res = nodeRepository.findByLocationNear(new Point(51.6776060, 39.1908793), new Distance(1, Metrics.KILOMETERS));
+        System.out.println("");
 //            ObjectMapper objectMapper = new ObjectMapper();
 //            ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
 //            writer.writeValue(Paths.get("src/main/java/ru/vsu/cs/eliseev/osmreader/osmdata/test1.json").toFile(), result.values());

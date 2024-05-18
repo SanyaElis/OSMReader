@@ -14,15 +14,15 @@ import java.util.List;
 @Setter
 public class Way extends ElementOnMap{
 
-    private final List<Node> nodes;//todo String
+    private final List<String> nodes;//todo String
 
     public Way(String id) {
         super(id);
         this.nodes = new ArrayList<>();
     }
 
-    public void addNode(Node node) {
-        if (node != null)
-            nodes.add(node);
+    public void addNode(String refNode) {
+        if (refNode != null)
+            nodes.add(refNode);
     }
 }

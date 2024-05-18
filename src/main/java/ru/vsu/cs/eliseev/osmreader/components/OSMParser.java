@@ -136,7 +136,7 @@ public class OSMParser extends DefaultHandler {
                 current = w;
                 break;
             case "nd":
-                ((Way) current).addNode((Node) elements.get("N" + attributes.getValue("ref")));
+                ((Way) current).addNode(attributes.getValue("ref"));
                 break;
             case "relation":
                 Relation r = new Relation(attributes.getValue("id"));
@@ -160,24 +160,11 @@ public class OSMParser extends DefaultHandler {
                 current = r;
                 break;
             case "member":
-                String refMember = getId(attributes.getValue("type"), attributes.getValue("ref"));
-
-                //If member isn't contained in data, create stub object
-                ElementOnMap elemMember = null;
-                if (!elements.containsKey(refMember)) {
-                    switch (attributes.getValue("type")) {
-                        case "node" -> elemMember = new Node(attributes.getValue("ref"));
-                        case "way" -> elemMember = new Way(attributes.getValue("ref"));
-                        case "relation" -> elemMember = new Relation(attributes.getValue("ref"));
-                    }
-                } else {
-                    elemMember = elements.get(refMember);
-                }
-
                 //Add member
                 ((Relation) current).addMember(
                         attributes.getValue("role"),
-                        elemMember
+                        attributes.getValue("type"),
+                        attributes.getValue("ref")
                 );
                 break;
             //Case of tag

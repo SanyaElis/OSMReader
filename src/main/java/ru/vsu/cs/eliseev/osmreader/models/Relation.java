@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Document(collection = "Relations")
 @TypeAlias("Relation")
@@ -21,34 +22,35 @@ public class Relation extends ElementOnMap {
         members = new ArrayList<>();
     }
 
-    public void addMember(String role, ElementOnMap element) {
-        if (element == null) {
+    public void addMember(String role, String type, String refElement) {
+        if (refElement == null) {
             throw new NullPointerException("Element can't be null");
         }
 
-        members.add(new Member(role, element));
+        members.add(new Member(role, type, refElement));
     }
 
-    public void removeMember(ElementOnMap e) {
-        members.removeIf(member -> e == member.elementOnMap);
+    public void removeMember(String ref) {
+        members.removeIf(member -> Objects.equals(ref, member.refMember));
     }
 
-    public String getMemberRole(ElementOnMap e) {
+    public String memberType(String ref) {
         for (Relation.Member member : members) {
-            if (member.elementOnMap == e)
+            if (Objects.equals(member.refMember, ref))
+                return member.type;
+        }
+        throw new RuntimeException("Element " + ref + " not found");
+    }
+
+    public String getMemberRole(String ref) {
+        for (Relation.Member member : members) {
+            if (Objects.equals(member.refMember, ref))
                 return member.role;
         }
-        throw new RuntimeException("Element " + e.getId() + " not found");
+        throw new RuntimeException("Element " + ref + " not found");
     }
 
-    private static class Member {
-        private final String role;
-        private final ElementOnMap elementOnMap;
-
-        public Member(String role, ElementOnMap elementOnMap) {
-            this.role = role;
-            this.elementOnMap = elementOnMap;
-        }
+    private record Member(String role, String type, String refMember) {
     }
 }
 

@@ -37,7 +37,7 @@ public class OsmReaderApplication {
         Map<String, ElementOnMap> result = parser.parse(new File("src/main/java/ru/vsu/cs/eliseev/osmreader/osmdata/output.osm"));
         for (Map.Entry<String, ElementOnMap> entry : result.entrySet()) {
             String key = entry.getKey();
-            try {
+             try {
                 switch (key.charAt(0)) {
                     case 'R':
                         relationRepository.insert((Relation) entry.getValue());
@@ -58,10 +58,6 @@ public class OsmReaderApplication {
         }
         List<Node> res = nodeRepository.findByLocationNear(new Point(51.6776060, 39.1908793), new Distance(1, Metrics.KILOMETERS));
         System.out.println("");
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            ObjectWriter writer = objectMapper.writer(new DefaultPrettyPrinter());
-//            writer.writeValue(Paths.get("src/main/java/ru/vsu/cs/eliseev/osmreader/osmdata/test1.json").toFile(), result.values());
-
     }
 
 }

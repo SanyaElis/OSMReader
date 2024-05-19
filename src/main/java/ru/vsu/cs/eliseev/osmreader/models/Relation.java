@@ -15,7 +15,7 @@ import java.util.Objects;
 @Setter
 public class Relation extends ElementOnMap {
 
-    private final List<Member> members;//todo переделать
+    private List<Member> members;
 
     public Relation(String id) {
         super(id);
@@ -50,7 +50,7 @@ public class Relation extends ElementOnMap {
         throw new RuntimeException("Element " + ref + " not found");
     }
 
-    private record Member(String role, String type, String refMember) {
+    public record Member(String role, String type, String refMember) {
     }
 }
 

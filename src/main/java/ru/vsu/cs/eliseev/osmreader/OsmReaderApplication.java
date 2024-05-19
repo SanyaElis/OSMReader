@@ -15,6 +15,12 @@ import ru.vsu.cs.eliseev.osmreader.components.OSMParser;
 import ru.vsu.cs.eliseev.osmreader.repositories.NodeRepository;
 import ru.vsu.cs.eliseev.osmreader.repositories.RelationRepository;
 import ru.vsu.cs.eliseev.osmreader.repositories.WayRepository;
+import ru.vsu.cs.eliseev.osmreader.services.NodeService;
+import ru.vsu.cs.eliseev.osmreader.services.RelationService;
+import ru.vsu.cs.eliseev.osmreader.services.WayService;
+import ru.vsu.cs.eliseev.osmreader.services.impl.NodeServiceImpl;
+import ru.vsu.cs.eliseev.osmreader.services.impl.RelationServiceImpl;
+import ru.vsu.cs.eliseev.osmreader.services.impl.WayServiceImpl;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
@@ -25,9 +31,23 @@ import java.util.Map;
 @SpringBootApplication
 public class OsmReaderApplication {
 
-    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
+    public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(OsmReaderApplication.class, args);
-        OSMParser parser = context.getBean(OSMParser.class);
+        NodeService nodeService = context.getBean(NodeServiceImpl.class);
+        WayService wayService = context.getBean(WayServiceImpl.class);
+        RelationService relationService = context.getBean(RelationServiceImpl.class);
+        Relation relation = relationService.findById("5632938");
+        List<Way> ways = relationService.getWaysInRelation(relation);
+        List<Node> nodes = relationService.getNodesInRelation(relation);
+
+        System.out.println("end");
+
+
+
+
+
+
+        /*OSMParser parser = context.getBean(OSMParser.class);
         RelationRepository relationRepository = context.getBean(RelationRepository.class);
         WayRepository wayRepository = context.getBean(WayRepository.class);
         NodeRepository nodeRepository = context.getBean(NodeRepository.class);
@@ -57,7 +77,7 @@ public class OsmReaderApplication {
             }
         }
         List<Node> res = nodeRepository.findByLocationNear(new Point(51.6776060, 39.1908793), new Distance(1, Metrics.KILOMETERS));
-        System.out.println("");
+        System.out.println("");*/
     }
 
 }

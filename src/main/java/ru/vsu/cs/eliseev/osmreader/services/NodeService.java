@@ -6,4 +6,6 @@ import ru.vsu.cs.eliseev.osmreader.models.Node;
 @Component
 public interface NodeService {
     void create(Node node);
+
+    Node findById(String ref);
 }

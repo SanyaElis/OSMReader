@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 public class Way extends ElementOnMap{
 
-    private List<String> nodes;//todo String
+    private List<String> nodes;
 
     public Way(String id) {
         super(id);
@@ -25,4 +25,5 @@ public class Way extends ElementOnMap{
         if (refNode != null)
             nodes.add(refNode);
     }
+
 }

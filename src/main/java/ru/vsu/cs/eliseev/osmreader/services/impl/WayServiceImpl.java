@@ -8,9 +8,7 @@ import ru.vsu.cs.eliseev.osmreader.repositories.WayRepository;
 import ru.vsu.cs.eliseev.osmreader.services.NodeService;
 import ru.vsu.cs.eliseev.osmreader.services.WayService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class WayServiceImpl implements WayService {
@@ -50,11 +48,16 @@ public class WayServiceImpl implements WayService {
 
     @Override
     public List<Way> findWaysInDistance(Way way, double distance) {
+        Set<Way> ways = new HashSet<>();
         List<Node> nodesInWay = getNodesInWay(way);
+        List<Node> nodesNearNode;
         for (Node node : nodesInWay) {
-            nodeService.findNodesInRadius(node, distance);
+            nodesNearNode = nodeService.findNodesInRadius(node, distance);
+            for (Node nearNode : nodesNearNode){
+                ways.addAll(repository.findByNodesContaining(nearNode.getId()));
+            }
         }
-        return null;
+        return new ArrayList<>(ways);
     }
 
     @Override

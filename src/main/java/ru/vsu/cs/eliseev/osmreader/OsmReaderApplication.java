@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @SpringBootApplication
 public class OsmReaderApplication {
@@ -50,6 +51,12 @@ public class OsmReaderApplication {
         List<Relation> relationsList = repository.findByMembersRefMember( "31002718");
         List<Way> wayList = wayService.findWaysByNodeId("2012296096");
         List<Node> nodeList = nodeService.findNodesInRadius(nodeService.findById("5823492474"), 0.05);
+        List<Way> wayList1 = wayService.findWaysInDistance(wayService.findById("24528756"), 0.01);
+        for (Way way : wayList1){
+            if (Objects.equals(way.getId(), "24528756")){
+                System.out.println("ooops");
+            }
+        }
 //        Relation relation = relationService.findById("5632938");
         System.out.println(success + " / " + allCount);
 

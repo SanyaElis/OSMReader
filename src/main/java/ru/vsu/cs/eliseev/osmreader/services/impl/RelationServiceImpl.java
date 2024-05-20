@@ -69,6 +69,26 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
+    public List<Relation> getRelationsInRelation(Relation relation) {
+        List<Relation> relations = new ArrayList<>();
+        Relation foundRelation = null;
+        for (Relation.Member member : relation.getMembers()) {
+            if (member.type().equals("relation")) {
+                foundRelation = findById(member.refMember());
+            }
+            if (foundRelation != null) {
+                relations.add(foundRelation);
+            }
+        }
+        return relations;
+    }
+
+    @Override
+    public List<Relation> findRelationByMemberId(String refMember) {
+        return repository.findByMembersRefMember(refMember);
+    }
+
+    @Override
     public Relation findById(String ref) {
         Optional<Relation> relation = repository.findById(ref);
         return relation.orElse(null);

@@ -36,11 +36,22 @@ public class OsmReaderApplication {
         NodeService nodeService = context.getBean(NodeServiceImpl.class);
         WayService wayService = context.getBean(WayServiceImpl.class);
         RelationService relationService = context.getBean(RelationServiceImpl.class);
-        Relation relation = relationService.findById("5632938");
-        List<Way> ways = relationService.getWaysInRelation(relation);
-        List<Node> nodes = relationService.getNodesInRelation(relation);
-
-        System.out.println("end");
+        RelationRepository repository = context.getBean(RelationRepository.class);
+        int success = 0;
+        int allCount = 0;
+        /*for (Relation relation: repository.findAll()){
+            allCount++;
+            List<Way> ways = relationService.getWaysInRelation(relation);
+            List<Node> nodes = relationService.getNodesInRelation(relation);
+            List<Relation> relations = relationService.getRelationsInRelation(relation);
+            if (relation.getMembers().size() == ways.size() + relations.size() + nodes.size())
+                success++;
+        }*/
+        List<Relation> relationsList = repository.findByMembersRefMember( "31002718");
+        List<Way> wayList = wayService.findWaysByNodeId("2012296096");
+        List<Node> nodeList = nodeService.findNodesInRadius(nodeService.findById("5823492474"), 0.05);
+//        Relation relation = relationService.findById("5632938");
+        System.out.println(success + " / " + allCount);
 
 
 

@@ -39,12 +39,26 @@ public class WayServiceImpl implements WayService {
     @Override
     public List<Node> getNodesInWay(Way way) {
         List<Node> nodes = new ArrayList<>();
-        Node foundNode = null;
+        Node foundNode;
         for (String nodeRef : way.getNodes()) {
             foundNode = nodeService.findById(nodeRef);
             if (foundNode != null)
                 nodes.add(foundNode);
         }
         return nodes;
+    }
+
+    @Override
+    public List<Way> findWaysInDistance(Way way, double distance) {
+        List<Node> nodesInWay = getNodesInWay(way);
+        for (Node node : nodesInWay) {
+            nodeService.findNodesInRadius(node, distance);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Way> findWaysByNodeId(String refNode) {
+        return repository.findByNodesContaining(refNode);
     }
 }

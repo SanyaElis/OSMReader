@@ -17,5 +17,9 @@ public interface RelationService {
 
     List<Way> getWaysInRelation(Relation relation);
 
+    List<Relation> getRelationsInRelation(Relation relation);
+
+    List<Relation> findRelationByMemberId(String refMember);
+
     Relation findById(String ref);
 }

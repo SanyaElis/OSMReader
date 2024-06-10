@@ -7,6 +7,7 @@ import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.xml.sax.SAXException;
+import ru.vsu.cs.eliseev.osmreader.components.Runner;
 import ru.vsu.cs.eliseev.osmreader.models.ElementOnMap;
 import ru.vsu.cs.eliseev.osmreader.models.Node;
 import ru.vsu.cs.eliseev.osmreader.models.Relation;
@@ -58,6 +59,8 @@ public class OsmReaderApplication {
             }
         }
 //        Relation relation = relationService.findById("5632938");
+        Runner runner = context.getBean(Runner.class);
+        runner.run();
         System.out.println(success + " / " + allCount);
 
 

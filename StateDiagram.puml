@@ -1,0 +1,26 @@
+@startuml
+[*] --> Initialization : Start
+
+Initialization --> ReadingOSMData : Initialization completed
+
+ReadingOSMData --> ProcessingData : Data read successfully
+ReadingOSMData --> Completed : Error reading data
+
+ProcessingData --> SavingToMongoDB : Data processed successfully
+ProcessingData --> Completed : Error processing data
+
+SavingToMongoDB --> SendingToKafka : Data saved to MongoDB
+SavingToMongoDB --> Completed : Error saving data to MongoDB
+
+SendingToKafka --> Completed : Data sent to Kafka successfully
+SendingToKafka --> Completed : Error sending data to Kafka
+
+Completed --> [*] : End
+
+state Initialization {
+  [*] --> SettingUpMongoDB : Setting up MongoDB connection
+  SettingUpMongoDB --> SettingUpKafka : MongoDB setup completed
+  SettingUpKafka --> [*] : Kafka setup completed
+}
+
+@enduml

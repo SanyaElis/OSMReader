@@ -2,9 +2,9 @@ package ru.vsu.cs.eliseev.osmreader.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.vsu.cs.eliseev.osmreader.models.Node;
-import ru.vsu.cs.eliseev.osmreader.models.Relation;
-import ru.vsu.cs.eliseev.osmreader.models.Way;
+import ru.vsu.cs.eliseev.osmreader.entities.Node;
+import ru.vsu.cs.eliseev.osmreader.entities.Relation;
+import ru.vsu.cs.eliseev.osmreader.entities.Way;
 import ru.vsu.cs.eliseev.osmreader.repositories.RelationRepository;
 import ru.vsu.cs.eliseev.osmreader.services.NodeService;
 import ru.vsu.cs.eliseev.osmreader.services.RelationService;

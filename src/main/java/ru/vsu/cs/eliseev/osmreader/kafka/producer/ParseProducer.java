@@ -4,10 +4,9 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Component;
-import ru.vsu.cs.eliseev.osmreader.models.Way;
+import ru.vsu.cs.eliseev.osmreader.entities.Way;
 
-@Component
+//@Component
 public class ParseProducer {
     @Qualifier("kafkaTemplate")
     private final KafkaTemplate<String, String> kafkaTemplate;

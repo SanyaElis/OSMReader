@@ -1,16 +1,13 @@
 package ru.vsu.cs.eliseev.osmreader.components;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import ru.vsu.cs.eliseev.osmreader.kafka.producer.ParseProducer;
 import ru.vsu.cs.eliseev.osmreader.kafka.topic.ParseTopic;
-import ru.vsu.cs.eliseev.osmreader.models.Way;
+import ru.vsu.cs.eliseev.osmreader.entities.Way;
 import ru.vsu.cs.eliseev.osmreader.services.WayService;
 
 import java.util.List;
 
-@Component
+//@Component
 
 public class Runner {
 
@@ -20,7 +17,7 @@ public class Runner {
 
     private final WayService wayService;
 
-    @Autowired
+//    @Autowired
     public Runner(ParseProducer producer, ParseTopic topic, WayService wayService) {
         this.producer = producer;
         this.topic = topic;

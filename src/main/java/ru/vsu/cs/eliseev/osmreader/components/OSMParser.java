@@ -6,10 +6,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import ru.vsu.cs.eliseev.osmreader.models.ElementOnMap;
-import ru.vsu.cs.eliseev.osmreader.models.Node;
-import ru.vsu.cs.eliseev.osmreader.models.Relation;
-import ru.vsu.cs.eliseev.osmreader.models.Way;
+import ru.vsu.cs.eliseev.osmreader.entities.ElementOnMap;
+import ru.vsu.cs.eliseev.osmreader.entities.Node;
+import ru.vsu.cs.eliseev.osmreader.entities.Relation;
+import ru.vsu.cs.eliseev.osmreader.entities.Way;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;

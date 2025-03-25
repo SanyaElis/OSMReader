@@ -1,20 +1,5 @@
 package ru.vsu.cs.eliseev.osmreader.components;
 
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
-import org.springframework.data.geo.Point;
-import ru.vsu.cs.eliseev.osmreader.models.ElementOnMap;
-import ru.vsu.cs.eliseev.osmreader.models.Node;
-import ru.vsu.cs.eliseev.osmreader.models.Relation;
-import ru.vsu.cs.eliseev.osmreader.models.Way;
-import ru.vsu.cs.eliseev.osmreader.repositories.NodeRepository;
-import ru.vsu.cs.eliseev.osmreader.repositories.RelationRepository;
-import ru.vsu.cs.eliseev.osmreader.repositories.WayRepository;
-
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
 public class FileReader {
 //    public void writeDataFromFileToDB(){
 //        OSMParser parser = context.getBean(OSMParser.class);

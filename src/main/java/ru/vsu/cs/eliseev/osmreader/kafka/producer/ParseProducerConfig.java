@@ -15,19 +15,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@Configuration
+//@Configuration
 @EnableKafka
 public class ParseProducerConfig {
 
-    @Value("${kafka.producer.servers}")
+    @Value("${spring.kafka.bootstrap-servers}")
     private String servers;
-    @Value("${kafka.producer.retries}")
+    @Value("${spring.kafka.producer.retries}")
     private int retries;
-    @Value("${kafka.producer.batch.size}")
+    @Value("${spring.kafka.producer.batch-size}")
     private int batchSize;
-    @Value("${kafka.producer.linger}")
+    @Value("${spring.kafka.producer.linger.ms}")
     private int linger;
-    @Value("${kafka.producer.buffer.memory}")
+    @Value("${spring.kafka.producer.buffer-memory}")
     private int bufferMemory;
 
 

@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: OSMReader
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: osm
+      username: root
+      password: example
+      authentication-database: admin
+  # input producer
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      buffer-memory: 40960
+      retries: 0
+      batch-size: 4096
+      linger:
+        ms: 1
+  # input topic
+    topic:
+      name:
+        for-input-topic: input
+      partitions:
+        for-input-topic: 3
+      replication-factor:
+        for-input-topic: 1
+#logging
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core: DEBUG

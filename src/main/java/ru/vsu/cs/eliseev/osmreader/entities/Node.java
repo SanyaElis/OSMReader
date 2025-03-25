@@ -1,4 +1,4 @@
-package ru.vsu.cs.eliseev.osmreader.models;
+package ru.vsu.cs.eliseev.osmreader.entities;
 
 import lombok.Getter;
 import lombok.Setter;

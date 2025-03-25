@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Getter
-@Configuration
+//@Configuration
 public class ParseTopic {
     @Value("${kafka.topic.name.for-input-topic}")
     private String topicName;

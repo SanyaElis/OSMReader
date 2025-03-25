@@ -34,3 +34,6 @@ logging:
         data:
           mongodb:
             core: DEBUG
+osm:
+  file:
+    path: src/main/resources/osm_data/output.osm

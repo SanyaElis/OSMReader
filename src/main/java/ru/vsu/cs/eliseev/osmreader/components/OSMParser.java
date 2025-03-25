@@ -1,5 +1,6 @@
 package ru.vsu.cs.eliseev.osmreader.components;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -14,9 +15,6 @@ import ru.vsu.cs.eliseev.osmreader.entities.Way;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,36 +22,26 @@ import java.util.Map;
 @Component
 public class OSMParser extends DefaultHandler {
 
+    private final DataSource dataSource;
     private Map<String, ElementOnMap> elements;
-
     private ElementOnMap current;
 
-    public OSMParser() {
-        super();
+
+    @Autowired
+    public OSMParser(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
-    public Map<String, ElementOnMap> parse(File f) throws IOException, SAXException, ParserConfigurationException {
-        //File check
-        if (!f.exists() || !f.isFile()) {
-            throw new FileNotFoundException();
-        }
-
-        if (!f.canRead()) {
-            throw new IOException("Can't read file");
-        }
-
-        return parse(new InputSource(new FileReader(f)));
-    }
-
-
-    public Map<String, ElementOnMap> parse(InputSource input) throws SAXException, IOException, ParserConfigurationException {
+    public Map<String, ElementOnMap> parse() throws IOException, SAXException, ParserConfigurationException {
         elements = new HashMap<>();
+        InputSource inputSource = dataSource.getInputSource();
+
         SAXParserFactory parserFactory = SAXParserFactory.newInstance();
         SAXParser parser = parserFactory.newSAXParser();
         XMLReader xr = parser.getXMLReader();
         xr.setContentHandler(this);
         xr.setErrorHandler(this);
-        xr.parse(input);
+        xr.parse(inputSource);
 
         return elements;
     }

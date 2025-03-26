@@ -9,5 +9,5 @@ import java.util.List;
 public interface OsmRelationService {
     boolean addChildren(Way way);
     boolean addChildren(Relation relation);
-    List<ElementOnMap> removePairs(String childId);
+    void removePairs(String childId);
 }

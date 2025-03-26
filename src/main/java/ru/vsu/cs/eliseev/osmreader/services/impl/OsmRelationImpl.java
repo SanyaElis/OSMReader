@@ -1,24 +1,36 @@
 package ru.vsu.cs.eliseev.osmreader.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.vsu.cs.eliseev.osmreader.entities.*;
+import org.springframework.transaction.annotation.Transactional;
+import ru.vsu.cs.eliseev.osmreader.entities.Node;
+import ru.vsu.cs.eliseev.osmreader.entities.OsmRelation;
+import ru.vsu.cs.eliseev.osmreader.entities.Relation;
+import ru.vsu.cs.eliseev.osmreader.entities.Way;
 import ru.vsu.cs.eliseev.osmreader.repositories.OsmRelationRepository;
 import ru.vsu.cs.eliseev.osmreader.services.NodeService;
 import ru.vsu.cs.eliseev.osmreader.services.OsmRelationService;
+import ru.vsu.cs.eliseev.osmreader.services.RelationService;
+import ru.vsu.cs.eliseev.osmreader.services.WayService;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class OsmRelationImpl implements OsmRelationService {
 
     private final NodeService nodeService;
     private final OsmRelationRepository osmRelationRepository;
+    private final WayService wayService;
+    private final RelationService relationService;
 
     @Autowired
-    public OsmRelationImpl(NodeService nodeService, OsmRelationRepository osmRelationRepository) {
+    public OsmRelationImpl(NodeService nodeService, OsmRelationRepository osmRelationRepository, WayService wayService, RelationService relationService) {
         this.nodeService = nodeService;
         this.osmRelationRepository = osmRelationRepository;
+        this.wayService = wayService;
+        this.relationService = relationService;
     }
 
     /**
@@ -28,33 +40,71 @@ public class OsmRelationImpl implements OsmRelationService {
      *
      * @param way a Way object containing a list of child nodes (Nodes).
      * @return {@code true} if all nodes were already present in the database (the Way is complete);
-     *         {@code false} if at least one node was added to the `osm_relation` collection.
+     * {@code false} if at least one node was added to the `osm_relation` collection.
      */
     @Override
     public boolean addChildren(Way way) {
         List<String> nodesInWay = way.getNodes();
         int addedCount = 0;
         for (String nodeReference : nodesInWay) {
-            Node currNode = nodeService.findById(nodeReference);
-            if (currNode != null)
-                continue;
-            OsmRelation osmRelation = OsmRelation.builder()
-                    .childId(nodeReference)
-                    .parentId(way.getId())
-                    .build();
-            osmRelationRepository.insert(osmRelation);
-            addedCount++;
+            if (addRelation(nodeReference, way.getId())) {
+                addedCount++;
+            }
         }
-        return addedCount == 0;
+        return addedCount == 0;//todo send to kafka (case where all children already in DB)
     }
 
     @Override
     public boolean addChildren(Relation relation) {
-        return false;
+        List<Relation.Member> members = relation.getMembers();
+        int addedCount = 0;
+        for (Relation.Member member : members) {
+            if (addRelation(member.refMember(), relation.getId())) {
+                addedCount++;
+            }
+        }
+        return addedCount == 0;//todo send to kafka (case where all children already in DB)
     }
 
     @Override
-    public List<ElementOnMap> removePairs(String childId) {
-        return null;
+    @Transactional
+    public void removePairs(String childId) {
+        List<OsmRelation> pairs = osmRelationRepository.findByChildId(childId);
+        osmRelationRepository.deleteAllByChildId(childId);
+        for (OsmRelation osmRelation : pairs) {
+            long countRecords = osmRelationRepository.countByParentId(osmRelation.getParentId());
+            if (countRecords > 0)
+                continue;
+            //todo send to kafka topic
+        }
+    }
+
+    private boolean addRelation(String childId, String parentId) {
+        OsmRelation osmRelation;
+        switch (childId.charAt(0)) {
+            case 'N':
+                Node currNode = nodeService.findById(childId);
+                if (currNode != null)
+                    return false;
+                break;
+            case 'W':
+                Way currWay = wayService.findById(childId);
+                if (currWay != null)
+                    return false;
+                break;
+            case 'R':
+                Relation relation = relationService.findById(childId);
+                if (relation != null)
+                    return false;
+                break;
+            default:
+                log.error("Unknown child id: {}", childId);
+        }
+        osmRelation = OsmRelation.builder()
+                .childId(childId)
+                .parentId(parentId)
+                .build();
+        osmRelationRepository.insert(osmRelation);
+        return true;
     }
 }

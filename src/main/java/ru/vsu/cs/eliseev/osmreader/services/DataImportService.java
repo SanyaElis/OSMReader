@@ -49,10 +49,10 @@ public class DataImportService {
                     case 'R' -> relationService.create((Relation) element);
                     case 'W' -> wayService.create((Way) element);
                     case 'N' -> nodeService.create((Node) element);
-                    default -> log.error("Unknown element type");
+                    default -> log.error("Unknown element type for element: {}", key);
                 }
             } catch (Exception e) {
-                System.out.println("Error saving element: " + e.getMessage());
+                log.error("Error while saving element: {}", key, e);
             }
         });
     }

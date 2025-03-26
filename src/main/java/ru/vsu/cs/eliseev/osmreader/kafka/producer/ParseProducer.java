@@ -13,7 +13,7 @@ public class ParseProducer {
 
     private final Gson gson;
 
-    @Autowired
+    //@Autowired
     public ParseProducer(KafkaTemplate<String, String> kafkaTemplate, Gson gson) {
         this.kafkaTemplate = kafkaTemplate;
         this.gson = gson;

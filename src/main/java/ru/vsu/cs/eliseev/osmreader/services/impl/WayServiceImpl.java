@@ -53,7 +53,7 @@ public class WayServiceImpl implements WayService {
         List<Node> nodesNearNode;
         for (Node node : nodesInWay) {
             nodesNearNode = nodeService.findNodesInRadius(node, distance);
-            for (Node nearNode : nodesNearNode){
+            for (Node nearNode : nodesNearNode) {
                 ways.addAll(repository.findByNodesContaining(nearNode.getId()));
             }
         }

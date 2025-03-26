@@ -7,7 +7,6 @@ import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import ru.vsu.cs.eliseev.osmreader.entities.Node;
 import ru.vsu.cs.eliseev.osmreader.repositories.NodeRepository;
-import ru.vsu.cs.eliseev.osmreader.repositories.OsmRelationRepository;
 import ru.vsu.cs.eliseev.osmreader.services.NodeService;
 
 import java.util.List;
@@ -16,12 +15,10 @@ import java.util.Optional;
 @Service
 public class NodeServiceImpl implements NodeService {
     private final NodeRepository nodeRepository;
-    private final OsmRelationRepository osmRelationRepository;
 
     @Autowired
-    public NodeServiceImpl(NodeRepository nodeRepository, OsmRelationRepository osmRelationRepository) {
+    public NodeServiceImpl(NodeRepository nodeRepository) {
         this.nodeRepository = nodeRepository;
-        this.osmRelationRepository = osmRelationRepository;
     }
 
     @Override

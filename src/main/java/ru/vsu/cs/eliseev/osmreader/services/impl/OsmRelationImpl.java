@@ -24,6 +24,7 @@ public class OsmRelationImpl implements OsmRelationService {
     private final OsmRelationRepository osmRelationRepository;
     private final WayService wayService;
     private final RelationService relationService;
+    private final String WAY_CHILD_TYPE = "node";
 
     @Autowired
     public OsmRelationImpl(NodeService nodeService, OsmRelationRepository osmRelationRepository, WayService wayService, RelationService relationService) {
@@ -47,7 +48,7 @@ public class OsmRelationImpl implements OsmRelationService {
         List<String> nodesInWay = way.getNodes();
         int addedCount = 0;
         for (String nodeReference : nodesInWay) {
-            if (addRelation(nodeReference, way.getId())) {
+            if (addRelation(nodeReference, way.getId(), WAY_CHILD_TYPE)) {
                 addedCount++;
             }
         }
@@ -59,7 +60,7 @@ public class OsmRelationImpl implements OsmRelationService {
         List<Relation.Member> members = relation.getMembers();
         int addedCount = 0;
         for (Relation.Member member : members) {
-            if (addRelation(member.refMember(), relation.getId())) {
+            if (addRelation(member.refMember(), relation.getId(), member.type())) {
                 addedCount++;
             }
         }
@@ -76,23 +77,24 @@ public class OsmRelationImpl implements OsmRelationService {
             if (countRecords > 0)
                 continue;
             //todo send to kafka topic
+            log.info("Collecting parent with id: {}", osmRelation.getParentId());
         }
     }
 
-    private boolean addRelation(String childId, String parentId) {
+    private boolean addRelation(String childId, String parentId, String childType) {
         OsmRelation osmRelation;
-        switch (childId.charAt(0)) {
-            case 'N':
+        switch (childType) {
+            case "node":
                 Node currNode = nodeService.findById(childId);
                 if (currNode != null)
                     return false;
                 break;
-            case 'W':
+            case "way":
                 Way currWay = wayService.findById(childId);
                 if (currWay != null)
                     return false;
                 break;
-            case 'R':
+            case "relation":
                 Relation relation = relationService.findById(childId);
                 if (relation != null)
                     return false;

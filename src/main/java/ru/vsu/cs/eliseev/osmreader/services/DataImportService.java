@@ -23,13 +23,15 @@ public class DataImportService {
     private final NodeService nodeService;
     private final RelationService relationService;
     private final WayService wayService;
+    private final OsmRelationService osmRelationService;
 
     @Autowired
-    public DataImportService(OSMParser parser, NodeService nodeService, RelationService relationService, WayService wayService) {
+    public DataImportService(OSMParser parser, NodeService nodeService, RelationService relationService, WayService wayService, OsmRelationService osmRelationService) {
         this.parser = parser;
         this.nodeService = nodeService;
         this.relationService = relationService;
         this.wayService = wayService;
+        this.osmRelationService = osmRelationService;
     }
 
     @Transactional
@@ -46,10 +48,25 @@ public class DataImportService {
         elements.forEach((key, element) -> {
             try {
                 switch (key.charAt(0)) {
-                    case 'R' -> relationService.create((Relation) element);
-                    case 'W' -> wayService.create((Way) element);
-                    case 'N' -> nodeService.create((Node) element);
-                    default -> log.error("Unknown element type for element: {}", key);
+                    case 'R':
+                        Relation relation = (Relation) element;
+                        relationService.create(relation);
+                        osmRelationService.addChildren(relation);
+                        osmRelationService.removePairs(relation.getId());
+                        break;
+                    case 'W':
+                        Way way = (Way) element;
+                        wayService.create((Way) element);
+                        osmRelationService.addChildren(way);
+                        osmRelationService.removePairs(way.getId());
+                        break;
+                    case 'N':
+                        Node node = (Node) element;
+                        nodeService.create((Node) element);
+                        osmRelationService.removePairs(node.getId());
+                        break;
+                    default:
+                        log.error("Unknown element type for element: {}", key);
                 }
             } catch (Exception e) {
                 log.error("Error while saving element: {}", key, e);

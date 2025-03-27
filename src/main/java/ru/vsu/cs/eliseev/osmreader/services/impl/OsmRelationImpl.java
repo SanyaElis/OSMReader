@@ -4,10 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vsu.cs.eliseev.osmreader.dto.ResolvedOsmDTO;
 import ru.vsu.cs.eliseev.osmreader.entities.Node;
 import ru.vsu.cs.eliseev.osmreader.entities.OsmRelation;
 import ru.vsu.cs.eliseev.osmreader.entities.Relation;
 import ru.vsu.cs.eliseev.osmreader.entities.Way;
+import ru.vsu.cs.eliseev.osmreader.kafka.producer.KafkaSender;
 import ru.vsu.cs.eliseev.osmreader.repositories.OsmRelationRepository;
 import ru.vsu.cs.eliseev.osmreader.services.NodeService;
 import ru.vsu.cs.eliseev.osmreader.services.OsmRelationService;
@@ -25,13 +27,15 @@ public class OsmRelationImpl implements OsmRelationService {
     private final WayService wayService;
     private final RelationService relationService;
     private final String WAY_CHILD_TYPE = "node";
+    private final KafkaSender kafkaSender;
 
     @Autowired
-    public OsmRelationImpl(NodeService nodeService, OsmRelationRepository osmRelationRepository, WayService wayService, RelationService relationService) {
+    public OsmRelationImpl(NodeService nodeService, OsmRelationRepository osmRelationRepository, WayService wayService, RelationService relationService, KafkaSender kafkaSender) {
         this.nodeService = nodeService;
         this.osmRelationRepository = osmRelationRepository;
         this.wayService = wayService;
         this.relationService = relationService;
+        this.kafkaSender = kafkaSender;
     }
 
     /**
@@ -78,6 +82,7 @@ public class OsmRelationImpl implements OsmRelationService {
                 continue;
             //todo send to kafka topic
             log.info("Collecting parent with id: {}", osmRelation.getParentId());
+            sendMessage(osmRelation.getParentId(), "Test kafka");//todo узнать тип
         }
     }
 
@@ -108,5 +113,10 @@ public class OsmRelationImpl implements OsmRelationService {
                 .build();
         osmRelationRepository.insert(osmRelation);
         return true;
+    }
+
+    private void sendMessage(String parentId, String type) {
+        ResolvedOsmDTO resolvedOsmDTO = new ResolvedOsmDTO(parentId, type);
+        kafkaSender.send("resolved_osm", resolvedOsmDTO);//todo topic name
     }
 }

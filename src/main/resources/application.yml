@@ -14,26 +14,28 @@ spring:
     bootstrap-servers: localhost:9092
     producer:
       buffer-memory: 40960
-      retries: 0
+      retries: 3
       batch-size: 4096
+      enable-idempotence: true
       linger:
         ms: 1
-  # input topic
+      acks: all
+    # input topic
     topic:
       name:
-        for-input-topic: input
+        for-input-topic: resolved_osm
       partitions:
         for-input-topic: 3
       replication-factor:
         for-input-topic: 1
 #logging
-logging:
-  level:
-    org:
-      springframework:
-        data:
-          mongodb:
-            core: DEBUG
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        data:
+#          mongodb:
+#            core: DEBUG
 osm:
   file:
-    path: src/main/resources/osm_data/output.osm
+    path: src/main/resources/osm_data/map_center.osm

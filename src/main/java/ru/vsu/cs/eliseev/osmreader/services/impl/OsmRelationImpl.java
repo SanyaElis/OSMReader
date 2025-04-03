@@ -44,11 +44,9 @@ public class OsmRelationImpl implements OsmRelationService {
      * to track incomplete parent objects.
      *
      * @param way a Way object containing a list of child nodes (Nodes).
-     * @return {@code true} if all nodes were already present in the database (the Way is complete);
-     * {@code false} if at least one node was added to the `osm_relation` collection.
      */
     @Override
-    public boolean addChildren(Way way) {
+    public void addChildren(Way way) {
         List<String> nodesInWay = way.getNodes();
         int addedCount = 0;
         for (String nodeReference : nodesInWay) {
@@ -56,11 +54,13 @@ public class OsmRelationImpl implements OsmRelationService {
                 addedCount++;
             }
         }
-        return addedCount == 0;//todo send to kafka (case where all children already in DB)
+        if (addedCount == 0) {
+            sendMessage(way.getId(), "way");
+        }
     }
 
     @Override
-    public boolean addChildren(Relation relation) {
+    public void addChildren(Relation relation) {
         List<Relation.Member> members = relation.getMembers();
         int addedCount = 0;
         for (Relation.Member member : members) {
@@ -68,7 +68,9 @@ public class OsmRelationImpl implements OsmRelationService {
                 addedCount++;
             }
         }
-        return addedCount == 0;//todo send to kafka (case where all children already in DB)
+        if (addedCount == 0) {
+            sendMessage(relation.getId(), "relation");
+        }
     }
 
     @Override

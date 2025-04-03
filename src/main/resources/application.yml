@@ -9,9 +9,7 @@ spring:
       username: root
       password: example
       authentication-database: admin
-  # input producer
   kafka:
-    bootstrap-servers: localhost:9092
     producer:
       buffer-memory: 40960
       retries: 3
@@ -20,7 +18,9 @@ spring:
       linger:
         ms: 1
       acks: all
-    # input topic
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     topic:
       name:
         for-input-topic: resolved_osm

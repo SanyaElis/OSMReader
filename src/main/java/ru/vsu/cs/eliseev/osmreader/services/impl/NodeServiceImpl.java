@@ -24,6 +24,7 @@ public class NodeServiceImpl implements NodeService {
     @Override
     public void create(Node node) {
         nodeRepository.insert(node);
+        nodeRepository.save(node);
     }
 
     @Override

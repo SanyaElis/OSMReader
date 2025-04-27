@@ -34,7 +34,7 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
-    public List<Relation> getRelationsInRadius(Relation relation, double radius) {//todo
+    public List<Relation> getRelationsInRadius(Relation relation, double radius) {
         return null;
     }
 

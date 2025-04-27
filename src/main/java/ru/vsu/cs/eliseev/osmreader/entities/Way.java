@@ -12,7 +12,7 @@ import java.util.List;
 @TypeAlias("Way")
 @Getter
 @Setter
-public class Way extends ElementOnMap{
+public class Way extends ElementOnMap {
 
     private List<String> nodes;
 

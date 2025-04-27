@@ -1,0 +1,4 @@
+db.osm_relation.createIndex(
+    { childId: 1, parentId: 1 },
+    { unique: true, name: "unique_child_parent" }
+)

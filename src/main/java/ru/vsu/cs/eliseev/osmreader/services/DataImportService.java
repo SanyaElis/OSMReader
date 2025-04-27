@@ -10,6 +10,7 @@ import ru.vsu.cs.eliseev.osmreader.entities.ElementOnMap;
 import ru.vsu.cs.eliseev.osmreader.entities.Node;
 import ru.vsu.cs.eliseev.osmreader.entities.Relation;
 import ru.vsu.cs.eliseev.osmreader.entities.Way;
+import ru.vsu.cs.eliseev.osmreader.enums.OSMType;
 import ru.vsu.cs.eliseev.osmreader.exceptions.DataImportException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,18 +53,18 @@ public class DataImportService {
                         Relation relation = (Relation) element;
                         relationService.create(relation);
                         osmRelationService.addChildren(relation);
-                        osmRelationService.removePairs(relation.getId());
+                        osmRelationService.removePairs(relation.getId(), OSMType.RELATION);
                         break;
                     case 'W':
                         Way way = (Way) element;
                         wayService.create((Way) element);
                         osmRelationService.addChildren(way);
-                        osmRelationService.removePairs(way.getId());
+                        osmRelationService.removePairs(way.getId(), OSMType.WAY);
                         break;
                     case 'N':
                         Node node = (Node) element;
                         nodeService.create((Node) element);
-                        osmRelationService.removePairs(node.getId());
+                        osmRelationService.removePairs(node.getId(), OSMType.NODE);
                         break;
                     default:
                         log.error("Unknown element type for element: {}", key);

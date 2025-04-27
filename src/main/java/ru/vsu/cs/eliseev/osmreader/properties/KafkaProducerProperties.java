@@ -14,7 +14,6 @@ public class KafkaProducerProperties {
     private Long bufferMemory;
     private Integer retries;
     private Integer batchSize;
-    private Boolean enableIdempotence;
     private String acks;
     private LingerProperties linger;
     private String bootstrapServers;

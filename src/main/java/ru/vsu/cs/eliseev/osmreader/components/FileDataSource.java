@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @Component
 @Primary
-public class FileDataSource implements DataSource{
+public class FileDataSource implements DataSource {
 
     @Value("${osm.file.path}")
     private String filePath;

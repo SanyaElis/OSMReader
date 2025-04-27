@@ -14,11 +14,10 @@ spring:
       buffer-memory: 40960
       retries: 3
       batch-size: 4096
-      enable-idempotence: true
       linger:
         ms: 1
-      acks: all
-      bootstrap-servers: localhost:9092
+      acks: 1
+      bootstrap-servers: localhost:29092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     topic:
@@ -28,6 +27,8 @@ spring:
         for-input-topic: 3
       replication-factor:
         for-input-topic: 1
+    bootstrap-servers:
+      - localhost:29092
 #logging
 #logging:
 #  level:
@@ -39,3 +40,11 @@ spring:
 osm:
   file:
     path: src/main/resources/osm_data/map_center.osm
+
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: logs/app.log
+    path: log

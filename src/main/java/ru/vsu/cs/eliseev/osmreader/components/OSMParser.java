@@ -81,8 +81,8 @@ public class OSMParser extends DefaultHandler {
             case "node":
                 Node n = new Node(
                         attributes.getValue("id"));
-                n.setLocation(new double[]{Double.parseDouble(attributes.getValue("lat")),
-                        Double.parseDouble(attributes.getValue("lon"))});
+                n.setLocation(new double[]{Double.parseDouble(attributes.getValue("lon")),
+                        Double.parseDouble(attributes.getValue("lat"))});
                 n.setUser(attributes.getValue("user"));
 
                 if (attributes.getValue("uid") != null) {

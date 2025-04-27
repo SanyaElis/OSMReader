@@ -8,7 +8,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import ru.vsu.cs.eliseev.osmreader.dto.ResolvedOsmDTO;
+import ru.vsu.cs.eliseev.osmreader.dto.ResolvedOSMDTO;
 import ru.vsu.cs.eliseev.osmreader.properties.KafkaProducerProperties;
 
 import java.util.HashMap;
@@ -29,7 +29,6 @@ public class ParseProducerConfig {
         props.put(ProducerConfig.RETRIES_CONFIG, properties.getRetries());
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, properties.getBatchSize());
         props.put(ProducerConfig.ACKS_CONFIG, properties.getAcks());
-        props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, properties.getEnableIdempotence());
         props.put(ProducerConfig.LINGER_MS_CONFIG, properties.getLinger().getMs());
         props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, properties.getBufferMemory());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, properties.getKeySerializer());
@@ -37,12 +36,12 @@ public class ParseProducerConfig {
         return props;
     }
 
-    public ProducerFactory<String, ResolvedOsmDTO> producerFactory() {
+    public ProducerFactory<String, ResolvedOSMDTO> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, ResolvedOsmDTO> kafkaTemplate() {
+    public KafkaTemplate<String, ResolvedOSMDTO> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }
